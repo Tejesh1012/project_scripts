@@ -1,0 +1,28 @@
+map aligt fact config:
+
+cfis in sls frc name : 
+freq will be in weekly and monthly 
+for frozen it will change in after the quarter changes will be changed 
+for ex : jan it will be q1-23 for frozen monthly it will be feb - frozen only in "Y".
+for weekly we can change for both frozen 'N' and 'Y';
+
+q1-23 quarter - frozen weekly and sls_frc_name : cfis,hivts.hivps,hivots,hivcl
+
+kam is a log of one month and nam is a log of two months
+kast and dodts are for kam for same in feb 
+name is MC which will change in March
+
+alig config tuesday according in the quarter change on q2-21 : cf need to change and no need to change for PAH
+CF : SAO, ZTT, ATTR ovrd , CUST ovrd
+
+alig config wednesday need to change the quarter
+
+
+attr ovrd config and cust ovrd config:
+
+
+Master_aligt_config:
+"Update for Quarter switch changes -
+changed Q1 to Q2 for HIVTS, HIVOTS, HIVPS , HIVCL sls_frc_nm and FROZEN_FLG=N
+
+Note:- When the weekly is on current quarter and frozen on previous quarter, keep the quarter as previous one for frozen_flg='Y'"

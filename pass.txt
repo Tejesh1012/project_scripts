@@ -1,0 +1,13 @@
+mmit_unaligned - this week triggered 12/05
+unaligned_fact_iqvia_laad_hbv - this week trigger 12/05
+fact_laad_hcv_clam - this week 12/05
+fact_pap_shift - today we need to trigger
+unalign_fact_ptnt_act_hcv - 12/05 triggered
+unaligned_fact_xpd_hbv_mth - 12/05 triggered 
+unaligned_fact_xpd_hcv_mth - 12/05 triggered
+unaligned_fact_xpd_hiv_mth - 12/05 triggered
+fact_g360 - completed today's run , yet to trigger master_g360_facts_r2 - not triggered 
+
+
+
+asset password : Hyderabad@1212

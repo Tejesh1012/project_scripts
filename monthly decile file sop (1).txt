@@ -1,0 +1,64 @@
+HIV_PREP Decile files we receive mail:
+ZS HIV ADHOCS Support
+Subject:HIV Treatment Deciles from APO-SEP'22
+we receive decile from them around monday or else send mail tuesday within 9am ist
+
+normally we receiving the files is 2 months back month files in nov we r doing
+we receive SEP'22 file(for nov month load we r loading sep month file)
+Another file :HIV PREP DECILE FILES FROM APO-SEP'22
+IF NOT GET MAIL SEND MAIL TO ZS HIV Adhocs support
+body of mail:
+Hi Team
+can u please share the hiv prep decile for september month.we need to do monthly process this week .kindly share the file by today EOD
+
+Thanks
+CAH_IT_Operations
+
+
+the dag is STG_SEGMENTATION 
+TWO DATASET_ID
+936-SEGMENTATION CONFIG FILE
+940-HIV_PREP_DECILE
+
+select * from ctl_dataset_master where dataset_id=940;
+select*from ctl_column_metadata where dataset_id=940;
+in output of ctl_column_metadata:
+source_column_name:FRAN,CUST_TYPE,CUST_ID,DECL,DEC_TYPE
+IF WE R CREATING FILE THE NO.OF COLUMNS IN THE FILE MATCHES WITH SOURCE_COLUMN_NAMES IN metadata output(with same name and same order)
+HIV decile file preparation:
+download last modified file from loc(west-2raw/us/input/sao/STG_SAO_ALL_DECL/)
+download file name:FF_STG_ALL_DECL.txt(copy the column names header from it)
+after coverting to text
+copy the EID AND WEIGHTED DECILE
+PASTE UNDER C COLUMN of which we copy headers from previous month file (CUST_ID AND DECL)
+IN FRAN column paste HIV
+IN CUST_TYPE column paste PRESCRIBER FROM PREVIOUS WEEK FILE
+copy in all rows as this two values
+check the count it matches with which we copy eid and weighted_type
+randomly check the values for which we prepared with original file
+HIV_PREP DECILE FILE preparation:
+name:HIV PrepAPO deciles SEP'22
+copy EID and WEIGHTEDdecile COLUMNS and paste(do count check) 
+we need to append wth HIV_PREPdecile values under that
+append under c column and d column
+in A and B column
+copy PREP and PRESCRIBER values from previous sheet
+pipelimit it and save
+go to file source location rename it to bkp and uploa latest file
+936:stg_seg_config
+west-2raw/us/input/sao/STG_SEG_CONGIG/
+FF_STG_SEG_CONFIG
+renaming with weekly (ff_stg_seg_config_wkly_20221116.txt)
+and upload monthly
+download the monthly file from same loc(FF_STG_SEG_CONFIG_MONTLY_20221019)
+CTR+F SEARCH FOR HIV3AGENT
+for this config file we no need to do any changes
+just change monthly (FF_STG_SEG_CONFIG_MONTHLY_20221019 TO FF_STG_SEG_CONFIG.txt and upload)
+
+
+
+
+
+
+
+

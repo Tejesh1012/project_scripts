@@ -1,0 +1,59 @@
+sao_xpd ingestion : 3 files 
+
+aligt -vrd - 27
+config  - 27
+excln - 27
+
+
+mmit - 27
+un fact iqvia laad hbv - tdy triggered
+fact laad hcv clam - tdy triggerd
+fact pap ship[t - 27  completed
+un fact ptnt hcv - 27 trigrd
+un xpd hbv mth- 27  TRG
+un xpd hcv - 27  TRG
+un xpd hiv - 27  TRG
+mast g360 facts r2 - TRIGGGRED
+fact_g360 - 27
+g360 na acc declie writeback - 27 TRG
+
+
+infra issue
+
+Issue Solved
+
+Issue Resolved at Onshore Timings
+
+jan - dec 2022 to nov 2022 
+
+nov 2020 files keep , dec 2020 to oct 2022 files delete ------- master -sha 
+
+hbv hcv snr excl
+config ingestion - 3262
+stg_aligt_ovrd 
+
+stg_segmentation
+unaligned fact iqvia laad hiv
+fact 360
+g360 facts r2
+master alignment
+
+
+HBV_HCV_SNR_EXCLUSION  -- Completed
+CONFIG_INGESTION (3262)  -- Completed
+SAO_XPD_INGESTION  --  Completed
+FACT_PAP_SHIPT     --   Completed
+MASTER_G360_FACTS_R2  -- Completed          
+G360_NA_ACCOUNT_DECILE_WRITEBACK  -- Completed
+Master_alignment  --  In Progress  
+
+hiv - 7
+hbv - 3
+hcv - 8
+prep - 8
+
+
+
+
+
+

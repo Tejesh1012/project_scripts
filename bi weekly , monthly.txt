@@ -1,0 +1,26 @@
+CA_Ingestion - Bi weekly
+
+ 
+
+MASTER_FACT_XPD_HBV_HCV_HIV_MTH - first week
+MASTER_SHA_HCV - Monthly first week
+
+ 
+
+MASTER_COVANCE_HCV - second week
+
+MASTER_COVANCE_HCV - second week
+
+
+STG_SEGMENTATION - third week
+STG_IQVIA_RTL_SLS_HCV_DELTA - third week
+STG_IQVIA_RTL_SLS_HCV_DELTA_HIST - third week
+STG_IQVIA_RTL_SLS_HCV_RESTAT - third week
+
+ 
+
+[EXTERNAL] Gilead Standard Monthly Utilization Report - For VA_Ingestion
+
+Gilead Delta Files - STG_IQVIA_RTL_SLS_HCV_DELTA 
+
+IQVIA Proactive Analytics for month - STG_IQVIA_RTL_SLS_HCV_RESTAT (Send a mail to Patrick)

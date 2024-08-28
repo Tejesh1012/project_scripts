@@ -1,0 +1,64 @@
+week 1 :
+hcv tues ops 
+
+tuesday 
+by 5 file comes : 4:30 around
+4 dags that run on hcv/hbv 
+
+1.SNR_ALL_INGESTION:
+
+In this after we get mail from DS&G we copy those 3 hiv hcv hbv same as sent in the s3 location s3://gilead-us-west-2-us-comm-compute-prd/us/input/sao/alignment/ and for prep 
+change th excel file to notepad by taking frst col to spilt (change spilt% to spilt) and last 6 colns till mirror_team
+and make an excel and pipe delimit and upload as notepad 
+run dag 
+
+2. SNR_DSG_EXTRACT :
+
+After above run is over , run this to check if corner cases are there 
+s3://gilead-us-west-2-us-comm-compute-prd/us/input/SNR_DSG_Extract/
+and if yes then send to ds&g team for it.
+
+3. Config_ingestion 361 sao excel
+s3://gilead-us-west-2-us-comm-compute-prd/us/input/sao/STG_SAO_SLS_EXCL/
+go to this path get previous week file
+filter to hbv hcv copy the same values 
+filter on hiv (cot_cd and plan)  and coppy same values 
+then copy the outlet ids from the file that ds&g team sends and copy from column values from previous week for accounts.
+then pipe limit file and then upload inn s3 and rename previous file as backup.
+
+4. then trigger MASTER_TUESDAY_HIV_HBV_HCV
+check if source files are arrived :
+s3://gilead-us-west-2-us-comm-compute-prd/CAH/COBI/ - for xpo hiv hbv 
+s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/ - for xpo HCV 
+s3://gilead-us-west-2-us-comm-compute-prd/CAH/ZS/from_gold/ - for AHM_ingestion 
+
+
+ which used to run 
+
+
+** IQVIA_XPO_Ingestion_HBV
+These are triggered when files are avaiable in S3
+to check file path in dataset master --- select * from ctl_dataset_master where dataset_id=701;( check for ids 705,702,703,704)-- has file and path details 
+source file loc : s3://gilead-us-west-2-us-comm-compute-prd/CAH/COBI/
+
+** IQVIA_XPO_Ingestion_HCV
+These are triggered when files are avaiable in S3
+to check file path in dataset master --- select * from ctl_dataset_master where dataset_id=707;( check for ids 706,708,709,710)
+spuce file path : s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox
+
+after these complete trigger 
+** STG_IQVIA_SALES_HBV_HIST
+** STG_IQVIA_SALES_HCV_HIST
+
+then work tables are run with parallel to hiv all run at a time 
+
+Select * from log_file_dtl where dataset_ids=701;  --- file load detail
+select * from log_file_smry where dataset_id=701;  --- just file loaded is shown
+select * from log_batch_dtl where dataset_id=701;  --- batch id date can be checked 
+
+
+
+
+
+
+

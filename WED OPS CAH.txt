@@ -1,0 +1,163 @@
+WEEK 1 : 
+WED SHADOW 
+HCV/HBV 
+
+1)  MASTER_FACT_IQVIA_LAAD_HIV   auto start at 10: 30 am ist 
+check laad fileas ae present before run 
+s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HIV/CUTOVER_LAAD/W38/CurrWeek/
+
+then run 
+MMIT_UNALIGNED			no dependendcy run anytime only after ca ingestion is done on mon
+UNALIGNED_FACT_IQVIA_LAAD_HBV			
+FACT_LAAD_HCV_CLAM			this runs as part of sha run if not run as no dependency
+FACT_PAP_SHIPT			this runs s part of covance or else no dependency 
+UNALIGN_FACT_PTNT_ACT_HCV			this run as part of sha or else no dependency 
+UNALIGNED_FACT_XPD_HBV_MTH			run as part of xpd month or else no dependency 
+,UNALIGNED_FACT_XPD_HCV_MTH			run as part of xpd month or else no dependency 
+UNALIGNED_FACT_XPD_HIV_MTH			
+MASTER_G360_FACTS_R2 			after fact_g360 is complete run this 
+
+then make stg_aligt_ovrd file 
+for this first make file : take previous week file 
+then filter hbv,hcv,hiv and filter only accounts and delete them 
+and then place acc details you get from loc s3://gilead-us-west-2-us-comm-compute-prd/us/input/SNR_Mastered_Final_CUrrWk/
+in file and rename the file in the path 
+s3://gilead-us-west-2-us-comm-compute-prd/us/input/sao/alignment/ and then run the dag sao_xpd_ingestion 557
+
+then for hbv_hcv_snr_exclusion
+copy outled ids from hcv and hbv snr file with filtered as team_final to aligned only 
+and pick headers from previous file and add the file s3://gilead-us-west-2-us-comm-compute-prd/us/input/sao/
+
+for prep for prep terr use text as filter and does not contain unassign and then select outlet ids for both ta s and paste file in s3 
+s3://gilead-us-west-2-us-comm-compute-prd/us/input/sao/alignment/ 
+and then run config ingestion dag 3262 HIV aj column ts_team_final have to filetr to assigned
+
+then do qc s before running aligment job 
+select SLS_FRC_NM, IS_FROZEN_FLG, cust_eid, sum(aligt_splt_pct) from stg_aligt_ovrd where SLS_FRC_NM='HIVTS' and IS_FROZEN_FLG='N' and terr_id like '%A' and pt_batch_id=(select max(pt_batch_id) from stg_aligt_ovrd)group by 1,2,3 having sum(aligt_splt_pct)>1 
+
+select SLS_FRC_NM, IS_FROZEN_FLG, cust_eid, sum(aligt_splt_pct) from stg_aligt_ovrd where SLS_FRC_NM='HIVTS' and IS_FROZEN_FLG='N' and terr_id not like '%A' and pt_batch_id=(select max(pt_batch_id) from stg_aligt_ovrd)group by 1,2,3 having sum(aligt_splt_pct)>1
+
+change for different TA s and check if the query is returning 0 only .
+
+then aligt_config and aligt_excl to see whhich file is to be fetched for the system 
+
+update log_batch_dtl set batch_status ='FAILED' where batch_id in ('2022070408272079952','2022070507001565635'); use update statement to mark fail .
+
+then run master_alignment 
+
+Comparison query:
+select pty_type, sls_frc_nm,aligt_perd_qtr,count(distinct terr_id) terr_id_count,count(distinct fnl_eid) fnl_eid_count,count(distinct pty_eid) pty_eid_count
+FROM "compute_us_comm_dw"."map_cust_aligt_drvd"
+where pt_cycle_id=(SELECT max(pt_cycle_id) FROM "compute_us_comm_dw"."map_cust_aligt_drvd")
+and aligt_perd_qtr in ('Q3-2022','Q2-2022') and edw_actv_flg='Y' and is_frozen_flg='N'
+group by 1,2,3 order by 1,2,3 ;
+
+
+
+
+
+After xpd files have arrived : 
+s3://gilead-us-west-2-us-comm-compute-prd/CAH/COBI/
+
+DELETE FROM com_orchestration_db.log_file_smry where dataset_id in ("347","410","411","412","421","349","416","417","418","401","402","403","419", "505", "775", "776", "777", "778", "779") and file_name like '%W25%' ;
+DELETE FROM com_orchestration_db.log_file_dtl where dataset_id in ("347","410","411","412","421","349","416","417","418","401","402","403","419", "505", "775", "776", "777", "778", "779") and file_name like '%W25%' ;
+
+delete the logs and run dag master_hiv_prep 
+
+  1)  in master_hiv_prep 
+            after the master_fact_xpd_hiv and MASTER_ALIGNMENT is complete clear the rest of the dags in master_hiv_prep
+
+ 2 )  in master_fact_xpd_hiv_weekly_r2 
+
+After xpo ingestion for hcv and hbv is completed 
+trigger MASTER_FACT_XPD_HBV_HCV
+
+
+  3 ) When master_fact_xpd_hbv_hcv and master _aligment is completed 
+
+trigger the master_hbv_hcv 
+
+BEFORE MATER DAGS WERE CREATED :....................
+
+WEDNESDAY
+after dim is complete cn trigger ths job 
+**1 ST DAG : MAP_PROD_VIREAD_SPLT
+AFTER this dag we can trigger unaligned facts for hbv/hcv 
+before starting we need to do the data mapping for process id : 2000
+insert into com_orchestration_db.ctl_process_date_mapping values(2000,'weekly','2022-06-06','N','admin',now(),1);-- when u have to trigger manually
+trigger dag runs for 2 hrs.
+
+all these dags shud b complted bfr align :
+
+after map prod trigger **UNALIGNED_FACT_IQVIA_SLS_HBV run after map s complete
+                       **UNALIGNED_FACT_IQVIA_SLS_HCV
+                        UNALIGNED_FACT_XPD_HBV_MTH
+                        UNALIGNED_FACT_XPD_HCV_MTH
+                          FACT_LAAD_HCV_CLAM
+                         FACT_LAAD_HBV_CLAM
+                             FACT_PAP_SHIPT
+                         FACT_RTL_SLS_HCV_DEL_RESET
+                        UNALIGN_FACT_PTNT_ACT_HCV   --- dim patient of sha is used here 
+                        UNALIGN_FACT_IQVIA_LAAD_HBV 
+                    
+
+After the files are avaialble comes around 9 pm 
+
+trigger   ** IQVIA_XPD_Ingestion_Wk_HCV
+Make sure new weekly files are present. For XPD WEEK Ingestion, delete the entries for the particular week that is to be ingested 
+in both log_file_smry and log_file_dtl.
+1.check the file source location from dataset master
+                 select * from ctl_dataset_master where dataset_id=417;                  
+2.Go to the file source location on S3
+        s3 loc : s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox
+3 copy the file pattern from dataset_master.
+     LRX.PROD.XD26051.SFMF.######.R04.W##.###.GZ
+4 Search for the file pattern copied in the S3 location.
+5 If the file is updated on S3 location with the latest date.
+6.Delete the logs from log file dtl and lo file smry.
+           1. select * from log_file_smry where dataset_id=417;---- get file name from here 
+           2. selct * from log_file_dtl where dataset_id=417 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+   ( first do a select to see only one row is there then )
+ 3.  delete : delete from log_file_dtl where dataset_id=417 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+ ( first do select to see one row is there : )  4. selct * from log_file_smry where dataset_id=417 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+   ( then delete : )   5. delete  from log_file_smry where dataset_id=417 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+
+repeat for all dataset ids : 418,416,349 
+ 
+7. trigger the ingestion Dag. 
+ Example select * from log_file_dtl where dataset_id=418
+ and file_name='s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD28401.CORE.CLI210.R04.W17.001.GZ';
+
+          **IQVIA_XPD_Ingestion_Wk_HBV
+
+
+Make sure new weekly files are present. For XPD WEEK Ingestion, delete the entries for the particular week that is to be ingested 
+in both log_file_smry and log_file_dtl.
+1.check the file source location from dataset master
+                 select * from ctl_dataset_master where dataset_id=412;                  
+2.Go to the file source location on S3
+        s3 loc : s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox
+3 copy the file pattern from dataset_master.
+     LRX.PROD.XD26051.SFMF.######.R04.W##.###.GZ
+4 Search for the file pattern copied in the S3 location.
+5 If the file is updated on S3 location with the latest date.
+6.Delete the logs from log file dtl and lo file smry.
+           1. select * from log_file_smry where dataset_id=412;---- get file name from here 
+           2. selct * from log_file_dtl where dataset_id=412 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+   ( first do a select to see only one row is there then ) 3.  delete : delete from log_file_dtl where dataset_id=412 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+ ( first do select to see one row is there : )  4. selct * from log_file_smry where dataset_id=412 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+   ( then delete : )   5. delete  from log_file_smry where dataset_id=412 and file name = 's3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD26051.SFMF.CLI210.R04.W21.001.GZ';
+
+repeat for all dataset ids : 410,411,347,421
+ 
+7. trigger the ingestion Dag. 
+ Example select * from log_file_dtl where dataset_id=
+ and file_name='s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/HCV/outbox/LRX.PROD.XD28401.CORE.CLI210.R04.W17.001.GZ';
+
+after these are done trigger : STG_IQVIA_XPD_HBV_HIST_WK
+                               STG_IQVIA_XPD_HCV_HIST_WK
+
+
+configuration issueInfrastructure IssueInfrastructure Issue
+the dag got failed at so and so step after clearing the dag it got completed
+

@@ -1,0 +1,40 @@
+Monthly loads :
+
+DElta :
+
+" run dag check the lastest file arrival in S3 :s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/DIT/SupplementFiles/ 
+See latest file is updated and then run the dag :
+STG_IQVIA_RTL_SLS_HCV_DELTA 
+
+
+For this manual entry to be made before running :
+Insert into com_orchestration_db.ctl_process_date_mapping values(12025,'weekly','2022-07-04','N','admin',now(),1);
+Run te dag 
+STG_IQVIA_RTL_SLS_HCV_DELTA_HIST"
+
+PROACTIVE FILE :
+Check lastest file in s3 :s3://gilead-us-west-2-us-comm-compute-prd/CAH/IMS/DIT/SupplementFiles/ 
+Run STG_IQVIA_RTL_SLS_HCV_RESTAT
+
+
+XPd :
+
+Check which files to be loaded this month in log_fle_dtl and check the file then delete the entries for that file 
+
+SET SQL_SAFE_UPDATES=0;
+delete FROM com_orchestration_db.log_file_smry where dataset_id in ("404","405","406","420", "502", "780","781","782","783","784","348","407","408","409","422","350","413","414","415") and file_name like '%M05%' ;
+delete FROM com_orchestration_db.log_file_dtl where dataset_id in ("404","405","406","420", "502", "780","781","782","783","784","348","407","408","409","422","350","413","414","415") and file_name like '%M05%' ;
+
+And then run dag : MASTER_FACT_XPD_HBV_HCV_HIV_MTH
+
+for stg_segmentation file 
+
+change the config entries for the ff_seg_config and make the monthly to active flag to Y for 5 obj as refered from previous file 
+and then make file from hiv prep decile recieved from the team 
+and then run the job STG_SEGMENTATION
+
+VA INGESTION 
+VA File is received in EXCEL format. We need to open the excel, save it as a CSV ( comma delimited) and also rename it correctly as per ctl_dataset_master. 
+Once the Excel workbook is saved as CSV, we need to open the CSV in notepad to ensure that there is no null data in the VA File and then upload the CSV to its file source location
+
+

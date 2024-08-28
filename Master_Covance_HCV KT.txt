@@ -1,0 +1,24 @@
+MASTER_COVNCE_HCV:
+one dataset_id for  (COVANCE_INGESTION_WK_HCV)
+dataset_id=451
+for ingestion we need to check if files r arrived in s3 loc
+s3:us-west-2-raw/CAH/SVCCOVANCE/OUTBOX/
+in s3 path we need to check the naming convention if they given correct or not before triggering the ingestion dag
+select * from ctl_dataset_master where dataset_id = 451
+file_name_pattern:Sovaldi_Shipments_DDMONYYYY.csv
+this month file name as - Sovaldi_Shipments_01DEC2022.csv
+For next if we r going to load we get as - Sovaldi_Shipments_01JAN2023.csv like that
+For Master_Covance_HCV:
+Make Date_mapping_entry for WT_DIM_ACNT_CVNC , WT_DIM_PRES_CVNC
+After that FACT_PAP_SHIPT also we need to make date_mapping entry
+For dimensions are common no changes made
+After that trigger the dag
+Every time if we run master_dags make sure the dimensions will triggering only once
+we make hold of DIM_ACNT,DIM_PRES,XREF_PTY
+after triggering master_tuesday , we can trigger dimensions in one go.
+
+
+"Update for Quarter switch changes -
+changed Q1 to Q2 for HIVTS, HIVOTS, HIVPS , HIVCL sls_frc_nm and FROZEN_FLG=N
+
+Note:- When the weekly is on current quarter and frozen on previous quarter, keep the quarter as previous one for frozen_flg='Y'"

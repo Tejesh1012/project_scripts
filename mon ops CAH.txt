@@ -1,0 +1,37 @@
+Mon 
+
+**CA ingestion biweekly mmit 
+
+run before dim plan in monday_master_hiv
+
+Master_monday_hiv (scheduled at 5 )
+
+**s3 : gilead-us-west-2-us-comm-compute-prd/cah/trailcard/outbox/
+search for gilead_enrollment_202206 3 files to b checked 
+
+knipper :
+
+**s3 : s3://gilead-us-west-2-us-comm-compute-prd/CAH/knipper/
+
+src_pg_sample_activity_2022 find for latest file 
+
+then dag is run automatically at 5 
+
+downstream recursive 
+
+sals exclusion file is used by unaligned fact sales_hiv that runs on tues 
+snr snr extract is indepedent on master_tues_hiv
+frst sales exclusion ingestion shud b completed bfr master_tues starts
+
+ahm_  gold files 
+ddd m on tues 
+
+master g360 
+dependent on facts of g360 dag as part of onc run  
+
+source input 
+target output
+
+
+
+awaiting project team

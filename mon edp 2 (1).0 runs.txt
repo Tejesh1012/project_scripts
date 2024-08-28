@@ -1,0 +1,51 @@
+open EMR IN aws console;
+open the cluster name-
+hardware-
+
+\\apollo\temp\excel templates CAH\Weekly 2.0 report validation Prod\HIV\RD  EDP2.0
+\\sjgcsnsvmg02\cah\Reports\AV\Weekly\2022\HIV_RD_Report\08-19_AWS  EDP1.0 
+
+Monday EDp2.0 Knipper_ingestion,tc_ingestion on Master_monday_hiv
+Gilead_Pharmacy_Claims_YYYYMMDDHHMMSS.txt  TC  s3://gilead-commercial-prd-us-west-2-raw/CAH/TRIALCARD/outbox/  dataset_id = 331
+SRC_PG_SAMPLE_ACTIVITY_YYYYMMDD.txt   Knipper  s3://gilead-commercial-prd-us-west-2-raw/CAH/knipper/              dataset_id = 333
+ 
+
+
+[9/26 1:56 PM] Nagendrakalyan Ponnampalle(Contractor)
+OCL:
+open Master_friday_extracts
+and open outlet_change_log_report
+process_id-1297
+go to s3 path and download the latest file
+search for outlet_change_log for latest (17th sep)
+copy and paste it in excel
+from outlook "outlet" get the last week file
+in c columnn ctrl+downarrow it came into last entry
+in previous week file H column the dat week should be 2022-09-02(yyy-mm-dd)
+copy the date and ctrl+shift downarrow and ctrl+v then
+in q column Terr we have blanks (go and search for previous week file date sheet search for blanks in terr)
+after copying each and every column form previousweek file under date of 2022-09-02
+rename the file
+after changing the timeperiod to jan-sep
+we need to draft a mail
+copy paste to addr and cc from provious week outlet change mail
+subject : HIV Outlet Change Log for WE 09/02Copy the body of  mail from prev mail
+date should be 2 weeks back date (09/02)
+
+[10/10 11:35 AM] NagaTejesh Kasula (Contractor)
+(s3://gilead-commercial-prd-us-west-2-processed/us/dw/all/extracts/doc/)(file 1)
+
+------
+BC_EXTRACTS:
+For BC&EPSILON - S3 location are same (go to airflow >> search for the master_friday_extracts >> get the dag name & datatset_id for BC_extracts >>do to CTL_DATASET_MASTER >> get the document link)
+
+select * from ctl_dataset_master where dataset_id in ("1287","1288","1289")
+from document link get this path and search in S3 and get last modified as last week friday date(18th nov)
+
+s3://gilead-commercial-prd-us-west-2-processed/us/dw/all/extracts/doc/	EXTRACT_BC_HIV
+s3://gilead-commercial-prd-us-west-2-processed/us/dw/all/extracts/doc/	EXTRACT_BC_HBV
+s3://gilead-commercial-prd-us-west-2-processed/us/dw/all/extracts/doc/	EXTRACT_BC_HCV
+
+for epsilon
+in above bc extract same path search for "GILD" U find in last modified date as last week date  (5 text files download)
+upload in the (\\apollo\temp\Epsilon_AWS)
